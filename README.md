@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+<div align="center">
+    <h2>
+      ⚙ <img src="./public/logo192.png" width="40x"/>
+      REACT &nbsp; D E P L O Y 
+      <img src="./public/logo192.png" width="40x"/> ⚙
+    </h2>
+    <a href="https://andredavedovicz.github.io/react-deploy/" target="_blank">🔗 Working in GitHub Pages</a>
+    <h3>How add a React project(deploy) to GitHub Pages? </h3>
+    <h3>Whenever you push to GitHub, it will deploy automatically!</h3>
+    <h4>Vite: <a href="https://github.com/andredavedovicz/vite-deploy" target="_blank">If you want to deploy a vite app see this repository!</a></h4>
+    
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+<br>
 
-### `npm start`
+### Follow the steps below on how to deploy a vite react app:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### 01. Create a vite react app
+```npm
+npx create-react-app [REPO_NAME]
+cd [REPO_NAME]
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 02. Create a new repository on GitHub and initialize GIT
+```git
+git init 
+git add . 
+git commit -m "add: initial files" 
+git branch -M main 
+git remote add origin https://github.com/[USER]/[REPO_NAME] 
+git push -u origin main
+```
 
-### `npm test`
+#### 03. Setup homepage on package.json
+```js
+"homepage": "https://[USER].github.io/[REPO_NAME]/"
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 04. Create ./github/workflows/deploy.yml and add the code bellow
+```yml
+name: Build & deploy
 
-### `npm run build`
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 13.x
+    
+    - name: Install NPM packages
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Run tests
+      run: npm run test
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    - name: Upload production-ready build files
+      uses: actions/upload-artifact@v2
+      with:
+        name: production-files
+        path: ./build
+  
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: production-files
+        path: ./build
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
+```
 
-### `npm run eject`
+#### 05. Push
+```git
+git add . 
+git commit -m "add: deploy workflow" 
+git push
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### 06. Active workflow
+```js
+Settings -> Actions -> General -> Workflow permissions -> Read and Write permissions 
+Settings -> Pages -> gh-pages -> save
+(if gh-pages it's not showing something is wrong!) 
+Actions -> failed deploy -> re-run-job failed jobs 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### 06. For code changes
+```git
+git add . 
+git commit -m "fix: some bug" 
+git push
+```
+Remember: Whenever you push to GitHub, it will deploy automatically
