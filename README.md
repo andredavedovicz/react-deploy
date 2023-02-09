@@ -15,9 +15,9 @@
 
 <br>
 
-### Follow the steps below on how to deploy a vite react app:
+### Follow the steps below on how to deploy a React app:
 
-#### 01. Create a vite react app
+#### 01. Create a React app
 ```npm
 npx create-react-app [REPO_NAME]
 cd [REPO_NAME]
@@ -39,6 +39,11 @@ git push -u origin main
 ```
 
 #### 04. Create ./github/workflows/deploy.yml and add the code bellow
+##### On your file create: 
+# ![aa](https://user-images.githubusercontent.com/88905492/217887391-1cf07688-37bd-434b-8294-503ec65dca6f.png)
+
+##### Paste the code below: 
+
 ```yml
 name: Build & deploy
 
