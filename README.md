@@ -121,4 +121,5 @@ git add .
 git commit -m "fix: some bug" 
 git push
 ```
-Remember: Whenever you push to GitHub, it will deploy automatically
+
+<h3>Remember: Whenever you push to GitHub, it will deploy automatically</h3>
