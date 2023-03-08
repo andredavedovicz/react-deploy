@@ -115,12 +115,12 @@ git push
 ```js
 Settings -> Actions -> General -> Workflow permissions -> Read and Write permissions 
 Settings -> Pages -> gh-pages -> save
-(if gh-pages it's not showing something is wrong!) 
+Obs.: Wait a minutes,if gh-pages it's not showing something is wrong! (the better way is doing again)
 Actions -> failed deploy -> re-run-job failed jobs 
 
 ```
 
-#### 06. For code changes
+#### BONUS: For code changes
 ```git
 git add . 
 git commit -m "fix: some bug" 
